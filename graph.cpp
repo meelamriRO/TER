@@ -119,3 +119,52 @@ graph* ReadFromFile(){
   
 }
 
+NetworkFlow * GraphToNetworkFlowInit(struct graph *G, int s, int t){
+  NetworkFlow * F = new struct NetworkFlow;
+
+  F->N = G->N;
+  F->s = s;
+  F->t = t;
+  F->flow = 0;
+  F->neighbours = vector <list <FlowNood> > (F->N);
+
+  for (int i = 0; i<F->N; i++){
+    list<nood>::iterator p1 = G->neighbours[i].begin();
+    list<FlowNood>::iterator p2 = F->neighbours[i].begin();
+    
+    while(p1 != G->neighbours[i].end()){
+      struct FlowNood f; 
+      f.n=p1->n;
+      f.c=p1->c;
+      f.c_=p1->c_;
+      f.flow = 0;
+      F->neighbours[i].push_back(f);
+      p1++;
+      p2++;
+    }
+  }
+    
+  return F;
+}
+
+std::ostream& operator<<(std::ostream& os, FlowNood& p)
+{
+  return os  << " Destination: " << p.n << " Cout: " << p.c << " Capcité: "<<p.c_<<" Flot: "<< p.flow<<" "<< endl;
+}
+
+
+
+void NetworkFlowDisplay(NetworkFlow *F){
+  cout<<"REDEAU DE FLOT CORRESPONDANT..."<<endl;
+  cout<<"FLOT CIRCULANT: "<<F->flow<<endl; 
+  for (int i = 0; i < F->N; i++){
+    list<FlowNood>::iterator p = F->neighbours[i].begin();
+    while(p != F->neighbours[i].end()) {
+      cout<<"\n"<<"source :"<< i; 
+      cout << *p;
+      p++;
+    }
+  }
+  cout <<endl; 
+}
+  
