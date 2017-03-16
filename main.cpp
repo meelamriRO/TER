@@ -5,6 +5,20 @@
 #include <queue>
 using namespace std;
 
+
+int AddEdgeNetwork(NetworkFlow *R, int nood1, int nood2, int c, int c_,int flow){
+  if(nood1 >= R->N || nood2 >= R-> N)
+    return 0;
+  else{ 
+    struct FlowNood n_; 
+    n_.n = nood2; 
+    n_.c = c;
+    n_.c_=c_;
+    n_.flow = flow;  
+    R->neighbours[nood1].push_back(n_); 
+    return 1;
+  }
+}
 bool bfs(NetworkFlow *R, int path[]){
   int s = R ->s;
   int t = R->t;
@@ -39,7 +53,7 @@ bool bfs(NetworkFlow *R, int path[]){
     cout<<"Pred: "<<endl; 
     for (int i =0; i < R->N; i++)cout<<path[i]<<" ";
     cout<<endl; 
-    cou<<"visited: "<<endl;
+    cout<<"visited: "<<endl;
     for (int i =0; i < R->N; i++){
       if(visited[i])cout<<i<<" ";
     }
@@ -51,7 +65,7 @@ bool bfs(NetworkFlow *R, int path[]){
     return (visited[t] == true);
 }
 
-NetworkFlow * fordFulkerson(NetworkFlow *F){
+int  fordFulkerson(NetworkFlow *F){
  
   //Cree le graph residuel, mettre les capacités comme résidu 
   NetworkFlow *R = new struct NetworkFlow;
@@ -76,13 +90,14 @@ NetworkFlow * fordFulkerson(NetworkFlow *F){
       p2++;
     }
   }
-
+  
   int path[R->N];
   int max_flow = 0; 
   // Augmenter le flot si existe chemin entre s et t 
-  while (bfs(R,path)){
+  while (bfs(R,path)){ 
     int path_flow = INT_MAX;
     for (int v = R->t; v!= R->s; v=path[v]) {
+       
       int u = path[v];
       list<FlowNood>::iterator p = R->neighbours[u].begin();
       while(p != F->neighbours[u].end()){
@@ -94,14 +109,24 @@ NetworkFlow * fordFulkerson(NetworkFlow *F){
     }
     
     for (int v = R->t; v != R->s; v=path[v]){
-      u = path[v];
+      int u = path[v];
+
       list<FlowNood>::iterator p = R->neighbours[u].begin();
-      while(p != F->neighbours[i].end()){
+      while(p != F->neighbours[u].end()){
 	if(p->n == v){
-	  p->flow -= path_flow; 
-	  rGraph[u][v] -= path_flow;
-	  rGraph[v][u] += path_flow;
+	  p->c_ -= path_flow;
+	  break;
 	}
+	p++;
+      }
+      AddEdgeNetwork(R, v, u, 1, 0, 0);
+      list<FlowNood>::iterator p1 = R->neighbours[v].begin();
+      while(p1 != F->neighbours[v].end()){
+	if(p1->n == u){
+	  p1->c_ += path_flow;
+	  break; 
+	}
+	p1++;
       }
     }
     max_flow += path_flow;
@@ -112,15 +137,13 @@ NetworkFlow * fordFulkerson(NetworkFlow *F){
   
 }
 
-  int main (){
+int main (){
   graph * G = ReadFromFile();
   GraphDisplay(G);
   //GraphDisplay(G);
-  NetworkFlow * F = GraphToNetworkFlowInit(G,0,1);
+  NetworkFlow * F = GraphToNetworkFlowInit(G,0,5);
   NetworkFlowDisplay(F);
-  NetworkFlow * R = fordFulkerson(F);
-  NetworkFlowDisplay(R);
-  int path[R->N]; 
-  cout<<"Chemin: "<<bfs(R, path)<<endl; 
+  cout<<"FLOT MAX: "<< fordFulkerson(F)<<endl;
+ 
   return 0; 
 }
