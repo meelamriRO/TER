@@ -240,7 +240,7 @@ int  fordFulkerson(NetworkFlow *F){
   
 }
 
-int  FlotMaxCoutMin(NetworkFlow *F){
+NetworkFlow *  FlotMaxCoutMin(NetworkFlow *F){
  
   //Cree le graph residuel, mettre les capacités comme résidu 
   NetworkFlow *R = new struct NetworkFlow;
@@ -269,8 +269,8 @@ int  FlotMaxCoutMin(NetworkFlow *F){
   int path[R->N];
   int max_flow = 0; 
   // Augmenter le flot si existe chemin entre s et t 
-  while (bfs(R,path)){
-  //while (DijsktraTab(R,path)){
+  //while (bfs(R,path)){
+  while (DijsktraTab(R,path)){
     int path_flow = INT_MAX;
     for (int v = R->t; v!= R->s; v=path[v]) {
        
@@ -308,21 +308,45 @@ int  FlotMaxCoutMin(NetworkFlow *F){
     } 
     max_flow += path_flow;
     R->flow += path_flow;
-    NetworkFlowDisplay(R);
+    //NetworkFlowDisplay(R);
+    if(max_flow==2)break; //K = 2
   }
-  
-  // Return the overall flow
-  return max_flow;
+  cout << "FLOT MAX COUT MIN: "<<max_flow<<endl; 
+  return R;
   
 }
 
+list<struct i_j>* ConstrainGeneration(graph *G){
+  GraphDisplay(G);
+  list <struct i_j>*DB = new list<struct i_j>; 
+  NetworkFlow * F = GraphToNetworkFlowInit(G,0,5);
+  F = FlotMaxCoutMin(F);
+  NetworkFlowDisplay(F);
+  for (int i = 0; i < F->N; i++){
+    list<FlowNood>::iterator p = F->neighbours[i].begin();
+    while(p != F->neighbours[i].end()) {
+      if(p->flow == 1){
+	struct i_j to_add; 
+	to_add.i=i;
+	to_add.j=p->n;
+	DB->push_back(to_add); 
+      }
+      //cout << *p;
+      p++;
+      
+    }
+  }
+  return DB; 
+}
+  
 int main (){
   graph * G = ReadFromFile();
-  GraphDisplay(G);
-  //GraphDisplay(G);
-  NetworkFlow * F = GraphToNetworkFlowInit(G,0,5);
-  NetworkFlowDisplay(F);
-  cout<<"FLOT MAX: "<< fordFulkerson(F)<<endl;
-  
+  list <struct i_j> *DB  = ConstrainGeneration(G);
+  list <i_j>::iterator iter=DB->begin();
+  while(iter!=DB->end()){
+      cout<<"i: "<<iter->i<<"\t";
+      cout<<"j: "<<iter->j<<endl;
+      iter++; 
+    }
   return 0; 
 }

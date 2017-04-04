@@ -7,7 +7,7 @@ struct graph * GraphInit(struct graph *g, int NbNood){
 }
 
 
-int AddEdge(struct graph *g, int nood1, int nood2, int c, int c_){
+int AddEdge(struct graph *g, int nood1, int nood2, int c, int c_){//ajout <=0;
   if(nood1 >= g->N || nood2 >= g-> N)
     return 0;
   else{ 

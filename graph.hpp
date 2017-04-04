@@ -25,6 +25,7 @@ struct nood {
 struct graph{
   vector <list <nood> > neighbours;
   int N;
+  
 };
 
 struct FlowNood{
@@ -42,7 +43,12 @@ struct NetworkFlow{
   vector <list <FlowNood>> neighbours;
 }; 
   
-  
+struct i_j{
+  int i;
+  int j;
+};
+
+
 struct graph * GraphInit(struct graph *g, int NbNood);
 int AddEdge(struct graph *g, int nood1, int nood2, int c, int c_);
 bool isEdge(graph *g, int i, int j); 
