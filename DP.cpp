@@ -337,7 +337,9 @@ list<struct i_j>* ConstrainGeneration(graph *G){
 /*
 int main (){
   graph * G = ReadFromFile();
-  list <struct i_j> *DB  = ConstrainGeneration(G);
+  updateEdge(G,0,5,10);
+  GraphDisplay(G);
+  /* list <struct i_j> *DB  = ConstrainGeneration(G);
 
 
   list <i_j>::iterator iter=DB->begin();
@@ -345,7 +347,8 @@ int main (){
       cout<<"i: "<<iter->i<<"\t";
       cout<<"j: "<<iter->j<<endl;
       iter++; 
-    }
+      
   return 0; 
 }
+
 */

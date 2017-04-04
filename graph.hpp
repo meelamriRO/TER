@@ -51,7 +51,8 @@ struct i_j{
 
 struct graph * GraphInit(struct graph *g, int NbNood);
 int AddEdge(struct graph *g, int nood1, int nood2, int c, int c_);
-bool isEdge(graph *g, int i, int j); 
+bool isEdge(graph *g, int i, int j);
+int updateEdge(graph *g, int i, int j, int cost); 
 int RemoveEdge(struct graph *g, int nood1, int nood2); 
 ostream& operator<<(std::ostream& os, nood& p);
 void GraphDisplay(struct graph *g);

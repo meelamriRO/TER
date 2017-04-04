@@ -32,6 +32,20 @@ bool isEdge(graph *g,int i, int j){
   return false;
 }
 
+int updateEdge(graph *g,int i, int j, int cost){
+  list<nood>::iterator p = g->neighbours[i].begin();
+  while(p != g->neighbours[i].end())
+    {
+      if(p->n == j){
+	p->c=cost;
+	return 1;
+      }
+      p++;
+      
+    }
+  return 0;
+}
+
 int RemoveEdge(graph* g, int i, int j){
   if(!isEdge(g,i, j))
     return 0 ;
