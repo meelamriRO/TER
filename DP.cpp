@@ -1,4 +1,5 @@
 #include"DP.hpp"
+#include <ctime>
 
 
 int AddEdgeNetwork(NetworkFlow *R, int nood1, int nood2, int c, int c_,int flow){
@@ -313,9 +314,30 @@ NetworkFlow *  FlotMaxCoutMin(NetworkFlow *F){
 
 list<struct i_j>* ConstrainGeneration(graph *G){
   GraphDisplay(G);
-  list <struct i_j>*DB = new list<struct i_j>; 
-  NetworkFlow * F = GraphToNetworkFlowInit(G,0,5);
-  F = FlotMaxCoutMin(F);
+  list <struct i_j>*DB = new list<struct i_j>;
+  int min = 0;
+  int max = G->N -1;
+  NetworkFlow * F;
+  time_t endwait;
+  time_t start = time(NULL);
+  time_t seconds = 10;
+  endwait = start + seconds;
+  do{
+    //La boucle peut etre infinie si le Graphe G ne contient aucun double chemin. 
+    int i = rand()%(max-min + 1) + min;
+    int j = rand()%(max-min + 1) + min;
+    if(i != j ){
+    cout << "Random i: "<<i<<endl;
+    cout << "Random j :"<<j<<endl; 
+    F = GraphToNetworkFlowInit(G,i,j);
+    F = FlotMaxCoutMin(F);
+    start = time(NULL); 
+    }
+  }
+  while(F->flow !=2 && start <endwait);
+  if(F->flow < 2){
+    return DB;
+  }
   NetworkFlowDisplay(F);
   for (int i = 0; i < F->N; i++){
     list<FlowNood>::iterator p = F->neighbours[i].begin();
@@ -334,12 +356,12 @@ list<struct i_j>* ConstrainGeneration(graph *G){
   return DB; 
 }
 
-/*
+
 int main (){
   graph * G = ReadFromFile();
-  updateEdge(G,0,5,10);
+  //updateEdge(G,0,5,10);
   GraphDisplay(G);
-  /* list <struct i_j> *DB  = ConstrainGeneration(G);
+  list <struct i_j> *DB  = ConstrainGeneration(G);
 
 
   list <i_j>::iterator iter=DB->begin();
@@ -347,8 +369,7 @@ int main (){
       cout<<"i: "<<iter->i<<"\t";
       cout<<"j: "<<iter->j<<endl;
       iter++; 
-      
+  }
   return 0; 
 }
 
-*/
