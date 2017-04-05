@@ -1,0 +1,10 @@
+#Skimap
+#Aussois ski resort
+
+NODES
+2
+
+
+LINKS
+0	1	1
+1	0	1
